@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StyleSheet, Text, View, Button, ActivityIndicator, FlatList, ScrollView } from 'react-native';
-import CrearEventoScreen from './screens/CrearEventoScreen'; // Ajusta la ruta si es necesario
+import { StyleSheet, Text, View, Button, ActivityIndicator, FlatList, ScrollView, Alert } from 'react-native';
+import CrearEventoScreen from './screens/CrearEventoScreen';
+import EditarEventoScreen from './screens/EditarEventoScreen'; // Ruta corregida
+
 import { useFocusEffect } from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
@@ -74,7 +76,6 @@ function EventosScreen({ navigation }) {
   const [eventos, setEventos] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
-  // Función para cargar eventos desde la API
   const cargarEventos = () => {
     setLoading(true);
     fetch('http://192.168.0.120:3000/api/eventos')
@@ -95,12 +96,24 @@ function EventosScreen({ navigation }) {
       });
   };
 
-  // Se recarga la lista cada vez que la pantalla gana foco.
+  // Actualiza la lista cada vez que la pantalla gana foco.
   useFocusEffect(
     React.useCallback(() => {
       cargarEventos();
     }, [])
   );
+
+  const eliminarEvento = (id) => {
+    fetch(`http://192.168.0.120:3000/api/eventos/${id}`, { method: 'DELETE' })
+      .then(response => response.json())
+      .then(data => {
+        Alert.alert('Éxito', 'Evento eliminado');
+        cargarEventos();
+      })
+      .catch(error => {
+        Alert.alert('Error', 'No se pudo eliminar el evento');
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -111,7 +124,7 @@ function EventosScreen({ navigation }) {
         <FlatList
           data={eventos}
           keyExtractor={(item, index) =>
-            item.eventId ? item.eventId.toString() : index.toString()
+            item.eventoId ? item.eventoId.toString() : index.toString()
           }
           renderItem={({ item }) => (
             <View style={styles.item}>
@@ -122,6 +135,10 @@ function EventosScreen({ navigation }) {
               <Text>Gasto Total: {item.gastoTotal}</Text>
               <Text>Gasto por Cabeza: {item.gastoCU}</Text>
               <Text>Participantes: {item.participantesNro}</Text>
+              <View style={styles.buttonRow}>
+                <Button title="Editar" onPress={() => navigation.navigate('EditarEvento', { evento: item })} />
+                <Button title="Eliminar" onPress={() => eliminarEvento(item.eventoId)} />
+              </View>
             </View>
           )}
         />
@@ -140,6 +157,7 @@ export default function App() {
         <Stack.Screen name="PantallaNode" component={PantallaNode} options={{ title: 'Node.js API' }} />
         <Stack.Screen name="Eventos" component={EventosScreen} options={{ title: 'Eventos PartyPay' }} />
         <Stack.Screen name="CrearEvento" component={CrearEventoScreen} options={{ title: 'Crear Evento' }} />
+        <Stack.Screen name="EditarEvento" component={EditarEventoScreen} options={{ title: 'Editar Evento' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -169,9 +187,16 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    width: '100%'
   },
   itemTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
+    width: '100%',
   },
 });

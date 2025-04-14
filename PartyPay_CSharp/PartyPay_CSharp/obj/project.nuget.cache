@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lp30lec/okM=",
+  "dgSpecHash": "1tBMrJKAtTk=",
   "success": true,
-  "projectFilePath": "C:\\APPs\\PartyPay\\PartyPay_CSharp\\PartyPay_CSharp\\PartyPay_CSharp.csproj",
+  "projectFilePath": "C:\\APPs\\PartyPay\\partypay_csharp\\partypay_csharp\\PartyPay_CSharp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\cbalu\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.4\\microsoft.aspnetcore.openapi.9.0.4.nupkg.sha512",
     "C:\\Users\\cbalu\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"

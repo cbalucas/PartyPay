@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\APPs\\PartyPay\\PartyPay_CSharp\\PartyPay_CSharp\\PartyPay_CSharp.csproj": {}
+    "C:\\APPs\\PartyPay\\partypay_csharp\\partypay_csharp\\PartyPay_CSharp.csproj": {}
   },
   "projects": {
-    "C:\\APPs\\PartyPay\\PartyPay_CSharp\\PartyPay_CSharp\\PartyPay_CSharp.csproj": {
+    "C:\\APPs\\PartyPay\\partypay_csharp\\partypay_csharp\\PartyPay_CSharp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\APPs\\PartyPay\\PartyPay_CSharp\\PartyPay_CSharp\\PartyPay_CSharp.csproj",
+        "projectUniqueName": "C:\\APPs\\PartyPay\\partypay_csharp\\partypay_csharp\\PartyPay_CSharp.csproj",
         "projectName": "PartyPay_CSharp",
-        "projectPath": "C:\\APPs\\PartyPay\\PartyPay_CSharp\\PartyPay_CSharp\\PartyPay_CSharp.csproj",
+        "projectPath": "C:\\APPs\\PartyPay\\partypay_csharp\\partypay_csharp\\PartyPay_CSharp.csproj",
         "packagesPath": "C:\\Users\\cbalu\\.nuget\\packages\\",
-        "outputPath": "C:\\APPs\\PartyPay\\PartyPay_CSharp\\PartyPay_CSharp\\obj\\",
+        "outputPath": "C:\\APPs\\PartyPay\\partypay_csharp\\partypay_csharp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
