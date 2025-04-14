@@ -1,22 +1,42 @@
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
+const cors = require('cors');
 
-// Endpoint de prueba que responde con un mensaje JSON
+// Permite parsear el cuerpo de las peticiones en formato JSON
+app.use(express.json());
+
+// Lista en memoria para almacenar los eventos
+let eventos = [
+  { id: 1, nombre: 'Fiesta de Lanzamiento', fecha: '2025-05-01' },
+  { id: 2, nombre: 'Noche PartyPay', fecha: '2025-06-15' },
+  { id: 3, nombre: 'Evento Exclusivo', fecha: '2025-07-20' }
+];
+
+// Habilitar CORS para todas las rutas
+app.use(cors());
+
+
+// Endpoint para obtener la lista de eventos (GET)
+app.get('/api/eventos', (req, res) => {
+  res.json(eventos);
+});
+
+// Endpoint para crear un nuevo evento (POST)
+app.post('/api/eventos', (req, res) => {
+  const nuevoEvento = req.body;
+  // Asigna un nuevo id automáticamente
+  nuevoEvento.id = eventos.length + 1;
+  eventos.push(nuevoEvento);
+  res.status(201).json(nuevoEvento);
+});
+
+// Endpoint para mostrar un mensaje de prueba (GET)
 app.get('/api', (req, res) => {
   res.json({ message: 'Hola PartyPay desde Node.js' });
 });
 
-// Inicia el servidor
-app.listen(port, () => {
-  console.log(`Servidor PartyPay escuchando en http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Servidor PartyPay escuchando en http://0.0.0.0:${port}`);
 });
 
-// Endpoint para obtener una lista de eventos
-app.get('/api/eventos', (req, res) => {
-  res.json([
-    { id: 1, nombre: 'Fiesta de Lanzamiento', fecha: '2025-05-01' },
-    { id: 2, nombre: 'Noche PartyPay', fecha: '2025-06-15' },
-    { id: 3, nombre: 'Evento Exclusivo', fecha: '2025-07-20' }
-  ]);
-});

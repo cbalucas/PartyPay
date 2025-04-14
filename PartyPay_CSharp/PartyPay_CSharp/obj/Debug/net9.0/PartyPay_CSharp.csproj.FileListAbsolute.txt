@@ -31,3 +31,4 @@ C:\APPs\PartyPay\partypay_csharp\partypay_csharp\obj\Debug\net9.0\refint\PartyPa
 C:\APPs\PartyPay\partypay_csharp\partypay_csharp\obj\Debug\net9.0\PartyPay_CSharp.pdb
 C:\APPs\PartyPay\partypay_csharp\partypay_csharp\obj\Debug\net9.0\PartyPay_CSharp.genruntimeconfig.cache
 C:\APPs\PartyPay\partypay_csharp\partypay_csharp\obj\Debug\net9.0\ref\PartyPay_CSharp.dll
+C:\APPs\PartyPay\partypay_csharp\partypay_csharp\obj\Debug\net9.0\PartyPay_CSharp.sourcelink.json

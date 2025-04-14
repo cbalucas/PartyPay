@@ -2,6 +2,8 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, Text, View, Button, ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import CrearEventoScreen from './screens/CrearEventoScreen'; // Ajusta la ruta si es necesario
+import { useFocusEffect } from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
 
@@ -72,18 +74,32 @@ function EventosScreen({ navigation }) {
   const [eventos, setEventos] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
-  React.useEffect(() => {
+  const cargarEventos = () => {
+    setLoading(true);
     fetch('http://192.168.0.120:3000/api/eventos')
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error en la respuesta: ' + response.status);
+        }
+        return response.json();
+      })
       .then(data => {
+        console.log('Eventos recibidos:', data);
         setEventos(data);
         setLoading(false);
       })
       .catch(error => {
-        console.error('Error al obtener eventos: ', error);
+        console.error('Error al obtener eventos:', error);
         setLoading(false);
       });
-  }, []);
+  };
+
+  // useFocusEffect se ejecuta cada vez que la pantalla gana foco.
+  useFocusEffect(
+    React.useCallback(() => {
+      cargarEventos();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
@@ -93,7 +109,9 @@ function EventosScreen({ navigation }) {
       ) : (
         <FlatList
           data={eventos}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item, index) =>
+            item.id ? item.id.toString() : index.toString()
+          }
           renderItem={({ item }) => (
             <View style={styles.item}>
               <Text>{item.nombre} - {item.fecha}</Text>
@@ -101,6 +119,7 @@ function EventosScreen({ navigation }) {
           )}
         />
       )}
+      <Button title="Agregar Evento" onPress={() => navigation.navigate('CrearEvento')} />
       <Button title="Volver" onPress={() => navigation.goBack()} />
     </View>
   );
@@ -113,6 +132,7 @@ export default function App() {
         <Stack.Screen name="PantallaCSharp" component={PantallaCSharp} options={{ title: 'C# API' }} />
         <Stack.Screen name="PantallaNode" component={PantallaNode} options={{ title: 'Node.js API' }} />
         <Stack.Screen name="Eventos" component={EventosScreen} options={{ title: 'Eventos PartyPay' }} />
+        <Stack.Screen name="CrearEvento" component={CrearEventoScreen} options={{ title: 'Crear Evento' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -125,11 +145,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
+    flex: 1,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 20,
+    textAlign: 'center',
   },
   message: {
     fontSize: 16,
