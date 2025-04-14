@@ -40,7 +40,7 @@ El servidor estará escuchando en el puerto configurado (por ejemplo, 3000).
 
 2. Inicia Expo:
 
-    > expo start
+    > npx expo start
 
 Esto abrirá Expo DevTools; escanea el código QR con tu dispositivo o usa un emulador para ver la aplicación.
 
