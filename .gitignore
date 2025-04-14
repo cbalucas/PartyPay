@@ -1,0 +1,10 @@
+# Ignorar dependencias de Node.js
+PartyPay_React/node_modules/
+PartyPay_Node/node_modules/
+
+# Ignorar compilaciones y binarios de C#
+PartyPay_CSharp/bin/
+PartyPay_CSharp/obj/
+
+# Otros archivos que no se desean versionar
+.DS_Store

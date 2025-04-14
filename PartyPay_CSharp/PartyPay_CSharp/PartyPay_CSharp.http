@@ -1,0 +1,6 @@
+@PartyPay_CSharp_HostAddress = http://localhost:5133
+
+GET {{PartyPay_CSharp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

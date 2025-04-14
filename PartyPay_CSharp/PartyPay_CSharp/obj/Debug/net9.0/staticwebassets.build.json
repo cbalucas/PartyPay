@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "nJ9WMgvileXT68iMJrIdHacO6H3FGisnoy2ZUHB0fuw=",
+  "Source": "PartyPay_CSharp",
+  "BasePath": "_content/PartyPay_CSharp",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
