@@ -13,6 +13,7 @@ PartyPay es un proyecto que integra tres componentes principales:
 ### 1. Ejecutar la API en C# (PartyPay_CSharp)
 1. Navega a la carpeta del proyecto C#:
    ```bash
+   
     > cd PartyPay/PartyPay_CSharp
 
 2. Ejecuta el siguiente comando para iniciar la API:
