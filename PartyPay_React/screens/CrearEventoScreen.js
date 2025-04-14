@@ -2,16 +2,27 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 
 export default function CrearEventoScreen({ navigation }) {
-  const [nombre, setNombre] = useState('');
+  const [titulo, setTitulo] = useState('');
   const [fecha, setFecha] = useState('');
+  const [direccion, setDireccion] = useState('');
+  const [maps, setMaps] = useState('');
 
   const crearEvento = () => {
-    if (!nombre || !fecha) {
+    if (!titulo || !fecha || !direccion || !maps) {
       Alert.alert('Error', 'Por favor, complete todos los campos');
       return;
     }
 
-    const nuevoEvento = { nombre, fecha };
+    const nuevoEvento = { 
+      titulo, 
+      fecha, 
+      direccion, 
+      maps,
+      // Los campos de gastos y participantes se inicializan en arrays vacíos,
+      // ya que se calcularán el gasto total, gasto por cabeza y cantidad de participantes en el backend.
+      gastos: [],
+      participantes: [] 
+    };
 
     fetch('http://192.168.0.120:3000/api/eventos', {
       method: 'POST',
@@ -22,7 +33,7 @@ export default function CrearEventoScreen({ navigation }) {
     })
       .then(response => response.json())
       .then(data => {
-        Alert.alert('Éxito', `Evento creado: ${data.nombre}`);
+        Alert.alert('Éxito', `Evento creado: ${data.titulo}`);
         navigation.goBack();
       })
       .catch(error => {
@@ -37,14 +48,26 @@ export default function CrearEventoScreen({ navigation }) {
       <TextInput
         style={styles.input}
         placeholder="Nombre del Evento"
-        value={nombre}
-        onChangeText={setNombre}
+        value={titulo}
+        onChangeText={setTitulo}
       />
       <TextInput
         style={styles.input}
         placeholder="Fecha (YYYY-MM-DD)"
         value={fecha}
         onChangeText={setFecha}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Dirección del Evento"
+        value={direccion}
+        onChangeText={setDireccion}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="URL de Maps (ej. Google Maps)"
+        value={maps}
+        onChangeText={setMaps}
       />
       <Button title="Crear Evento" onPress={crearEvento} />
     </View>

@@ -25,7 +25,7 @@ La API se ejecutará en la URL configurada (por ejemplo, http://0.0.0.0:5000).
 ### 2. Ejecutar el Servidor en Node.js (PartyPay_Node)
 1. Navega a la carpeta del proyecto Node.js:
 
-    > cd PartyPay/PartyPay_Node
+    > cd PartyPay_Node
 
 2. Ejecuta el comando para iniciar el servidor:
 
@@ -36,7 +36,7 @@ El servidor estará escuchando en el puerto configurado (por ejemplo, 3000).
 ### 3. Ejecutar la Aplicación en React Native (PartyPay_React)
 1. Navega a la carpeta del proyecto React Native:
 
-    > cd PartyPay/PartyPay_React
+    > cd PartyPay_React
 
 2. Inicia Expo:
 

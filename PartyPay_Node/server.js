@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const cors = require('cors');
+const Evento = require('./models/EventoModel');
 
 // Permite parsear el cuerpo de las peticiones en formato JSON
 app.use(express.json());
@@ -24,12 +25,16 @@ app.get('/api/eventos', (req, res) => {
 
 // Endpoint para crear un nuevo evento (POST)
 app.post('/api/eventos', (req, res) => {
-  const nuevoEvento = req.body;
-  // Asigna un nuevo id automáticamente
-  nuevoEvento.id = eventos.length + 1;
+  const { titulo, fecha, direccion, maps, gastos, participantes } = req.body;
+  // Crear una instancia del evento utilizando el modelo
+  const nuevoEvento = new Evento({ titulo, fecha, direccion, maps, gastos, participantes });
+  
+  // Agrega el nuevo evento a tu lista de eventos en memoria
   eventos.push(nuevoEvento);
+  
   res.status(201).json(nuevoEvento);
 });
+
 
 // Endpoint para mostrar un mensaje de prueba (GET)
 app.get('/api', (req, res) => {

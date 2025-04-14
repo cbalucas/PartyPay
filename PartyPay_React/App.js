@@ -74,6 +74,7 @@ function EventosScreen({ navigation }) {
   const [eventos, setEventos] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
+  // Función para cargar eventos desde la API
   const cargarEventos = () => {
     setLoading(true);
     fetch('http://192.168.0.120:3000/api/eventos')
@@ -94,7 +95,7 @@ function EventosScreen({ navigation }) {
       });
   };
 
-  // useFocusEffect se ejecuta cada vez que la pantalla gana foco.
+  // Se recarga la lista cada vez que la pantalla gana foco.
   useFocusEffect(
     React.useCallback(() => {
       cargarEventos();
@@ -110,11 +111,17 @@ function EventosScreen({ navigation }) {
         <FlatList
           data={eventos}
           keyExtractor={(item, index) =>
-            item.id ? item.id.toString() : index.toString()
+            item.eventId ? item.eventId.toString() : index.toString()
           }
           renderItem={({ item }) => (
             <View style={styles.item}>
-              <Text>{item.nombre} - {item.fecha}</Text>
+              <Text style={styles.itemTitle}>{item.titulo}</Text>
+              <Text>Fecha: {item.fecha}</Text>
+              <Text>Dirección: {item.direccion}</Text>
+              <Text>Maps: {item.maps}</Text>
+              <Text>Gasto Total: {item.gastoTotal}</Text>
+              <Text>Gasto por Cabeza: {item.gastoCU}</Text>
+              <Text>Participantes: {item.participantesNro}</Text>
             </View>
           )}
         />
@@ -162,5 +169,9 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+  },
+  itemTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
