@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, Alert } from 'react-native';
+// Importar estilos desde nuestro archivo separado
+import crearEventoStyles from '../styles/CrearEventoStyles';
 
 export default function CrearEventoScreen({ navigation }) {
   const [titulo, setTitulo] = useState('');
@@ -18,7 +20,6 @@ export default function CrearEventoScreen({ navigation }) {
       fecha, 
       direccion, 
       maps,
-      // Inicializamos gastos y participantes como arrays vacíos
       gastos: [],
       participantes: [] 
     };
@@ -42,28 +43,28 @@ export default function CrearEventoScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Crear Nuevo Evento</Text>
+    <View style={crearEventoStyles.container}>
+      <Text style={crearEventoStyles.title}>Crear Nuevo Evento</Text>
       <TextInput
-        style={styles.input}
+        style={crearEventoStyles.input}
         placeholder="Nombre del Evento"
         value={titulo}
         onChangeText={setTitulo}
       />
       <TextInput
-        style={styles.input}
+        style={crearEventoStyles.input}
         placeholder="Fecha (YYYY-MM-DD)"
         value={fecha}
         onChangeText={setFecha}
       />
       <TextInput
-        style={styles.input}
+        style={crearEventoStyles.input}
         placeholder="Dirección del Evento"
         value={direccion}
         onChangeText={setDireccion}
       />
       <TextInput
-        style={styles.input}
+        style={crearEventoStyles.input}
         placeholder="URL de Maps (ej. Google Maps)"
         value={maps}
         onChangeText={setMaps}
@@ -72,24 +73,3 @@ export default function CrearEventoScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-    backgroundColor: '#f2f2f2'
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    textAlign: 'center'
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 5
-  }
-});

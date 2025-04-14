@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, Alert } from 'react-native';
+// Importar estilos desde nuestro archivo separado
+import editarEventoStyles from '../styles/EditarEventoStyles';
 
 export default function EditarEventoScreen({ route, navigation }) {
   const { evento } = route.params;
@@ -30,28 +32,28 @@ export default function EditarEventoScreen({ route, navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Editar Evento</Text>
+    <View style={editarEventoStyles.container}>
+      <Text style={editarEventoStyles.title}>Editar Evento</Text>
       <TextInput
-        style={styles.input}
+        style={editarEventoStyles.input}
         placeholder="Título del Evento"
         value={titulo}
         onChangeText={setTitulo}
       />
       <TextInput
-        style={styles.input}
+        style={editarEventoStyles.input}
         placeholder="Fecha (YYYY-MM-DD)"
         value={fecha}
         onChangeText={setFecha}
       />
       <TextInput
-        style={styles.input}
+        style={editarEventoStyles.input}
         placeholder="Dirección del Evento"
         value={direccion}
         onChangeText={setDireccion}
       />
       <TextInput
-        style={styles.input}
+        style={editarEventoStyles.input}
         placeholder="URL de Maps"
         value={maps}
         onChangeText={setMaps}
@@ -60,25 +62,3 @@ export default function EditarEventoScreen({ route, navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-    backgroundColor: '#f2f2f2',
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 5,
-    width: '100%'
-  },
-});

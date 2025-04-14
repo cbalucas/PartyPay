@@ -7,6 +7,9 @@ import EditarEventoScreen from './screens/EditarEventoScreen'; // Ruta corregida
 
 import { useFocusEffect } from '@react-navigation/native';
 
+// Importamos estilos desde nuestro archivo separado
+import appStyles from './styles/AppStyles';
+
 const Stack = createNativeStackNavigator();
 
 function PantallaCSharp({ navigation }) {
@@ -28,12 +31,12 @@ function PantallaCSharp({ navigation }) {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Pantalla API C#</Text>
+    <ScrollView contentContainerStyle={appStyles.container}>
+      <Text style={appStyles.title}>Pantalla API C#</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <Text style={styles.message}>{apiMessage}</Text>
+        <Text style={appStyles.message}>{apiMessage}</Text>
       )}
       <Button title="Ir a API Node.js" onPress={() => navigation.navigate('PantallaNode')} />
     </ScrollView>
@@ -59,12 +62,12 @@ function PantallaNode({ navigation }) {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Pantalla API Node.js</Text>
+    <ScrollView contentContainerStyle={appStyles.container}>
+      <Text style={appStyles.title}>Pantalla API Node.js</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <Text style={styles.message}>{apiMessage}</Text>
+        <Text style={appStyles.message}>{apiMessage}</Text>
       )}
       <Button title="Ver Eventos" onPress={() => navigation.navigate('Eventos')} />
       <Button title="Volver a API C#" onPress={() => navigation.goBack()} />
@@ -116,8 +119,8 @@ function EventosScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Eventos PartyPay</Text>
+    <View style={appStyles.container}>
+      <Text style={appStyles.title}>Eventos PartyPay</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
@@ -127,15 +130,15 @@ function EventosScreen({ navigation }) {
             item.eventoId ? item.eventoId.toString() : index.toString()
           }
           renderItem={({ item }) => (
-            <View style={styles.item}>
-              <Text style={styles.itemTitle}>{item.titulo}</Text>
+            <View style={appStyles.item}>
+              <Text style={appStyles.itemTitle}>{item.titulo}</Text>
               <Text>Fecha: {item.fecha}</Text>
               <Text>Dirección: {item.direccion}</Text>
               <Text>Maps: {item.maps}</Text>
               <Text>Gasto Total: {item.gastoTotal}</Text>
               <Text>Gasto por Cabeza: {item.gastoCU}</Text>
               <Text>Participantes: {item.participantesNro}</Text>
-              <View style={styles.buttonRow}>
+              <View style={appStyles.buttonRow}>
                 <Button title="Editar" onPress={() => navigation.navigate('EditarEvento', { evento: item })} />
                 <Button title="Eliminar" onPress={() => eliminarEvento(item.eventoId)} />
               </View>
@@ -162,41 +165,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    backgroundColor: '#f2f2f2',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-    flex: 1,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  message: {
-    fontSize: 16,
-    marginVertical: 20,
-    textAlign: 'center',
-  },
-  item: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    width: '100%'
-  },
-  itemTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 10,
-    width: '100%',
-  },
-});
