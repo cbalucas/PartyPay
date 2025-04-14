@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PartyPay_CSharp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7fd8a14ce85a2ce8a7dc92567ddf249a9a2f02ef")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+316f228353a7929859ee12ee5e1f62152416f829")]
 [assembly: System.Reflection.AssemblyProductAttribute("PartyPay_CSharp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PartyPay_CSharp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
