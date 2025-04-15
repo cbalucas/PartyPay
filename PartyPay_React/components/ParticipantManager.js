@@ -4,17 +4,15 @@ import { View, Text, FlatList, TouchableOpacity, Modal, TextInput, Button, Image
 
 const ParticipantManager = ({ participants, onParticipantsChange, whatsappActive }) => { const [modalVisible, setModalVisible] = useState(false); const [editingParticipant, setEditingParticipant] = useState(null); const [nombre, setNombre] = useState(''); const [email, setEmail] = useState(''); const [cbu, setCbu] = useState(''); const [telefono, setTelefono] = useState('');
 
-
-// Estados para marcar error (usaremos simplemente un string; si no está vacío, se pinta de rojo) 
+// Estados para errores 
 const [errorNombre, setErrorNombre] = useState(''); const [errorTelefono, setErrorTelefono] = useState('');
 
 const openModalForNew = () => { setEditingParticipant(null); setNombre(''); setEmail(''); setCbu(''); setTelefono(''); setErrorNombre(''); setErrorTelefono(''); setModalVisible(true); };
 
+
 const openModalForEdit = (participant) => { setEditingParticipant(participant); setNombre(participant.nombre); setEmail(participant.email); setCbu(participant.CBU); setTelefono(participant.telefono ? participant.telefono.toString() : ''); setErrorNombre(''); setErrorTelefono(''); setModalVisible(true); };
 
 const saveParticipant = () => { let valid = true; if (!nombre) { setErrorNombre('error'); valid = false; } else { setErrorNombre(''); } if (whatsappActive && !telefono) { setErrorTelefono('error'); valid = false; } else { setErrorTelefono(''); } if (!valid) return;
-
-  
 
 let updatedParticipants = [...participants];
 if (editingParticipant) {
@@ -36,38 +34,47 @@ if (editingParticipant) {
 onParticipantsChange(updatedParticipants);
 setModalVisible(false);
 
+
   };
 
   const deleteParticipant = (participantId) => { const updatedParticipants = participants.filter(p => p.participantId !== participantId); onParticipantsChange(updatedParticipants); };
+  
 
-  return ( <View style={participantStyles.container}> {/* Encabezado con botón de agregar participante y título */} <View style={participantStyles.headerRow}> <TouchableOpacity onPress={openModalForNew}> <Image source={require('../assets/iconos/participantesadd.png')} style={participantStyles.headerIcon} /> </TouchableOpacity> <Text style={participantStyles.title}>Participantes</Text> </View>
+  return ( <View style={participantStyles.container}> {/* Encabezado con botón para agregar participante y título */} <View style={participantStyles.headerRow}> <TouchableOpacity onPress={openModalForNew}> <Image source={require('../assets/iconos/participantesadd.png')} style={participantStyles.headerIcon} /> </TouchableOpacity> <Text style={participantStyles.title}>Participantes</Text> </View>
 
+  {/* Encabezado para las columnas de la lista */}
+  <View style={participantStyles.listHeader}>
+    <Text style={participantStyles.headerCellName}>Nombre Participante</Text>
+    <Text style={participantStyles.headerCellTel}>Teléfono</Text>
+    <Text style={participantStyles.headerCellCBU}>CBU</Text>
+    <Text style={participantStyles.headerCellEmail}>Email</Text>
+    {/* <Text style={participantStyles.headerCellAction}>Editar</Text>
+    <Text style={participantStyles.headerCellAction}>Eliminar</Text> */}
+  </View>
 
-
-<FlatList
+  {/* Visualización de participantes en formato de fila */}
+  <FlatList
     data={participants}
     keyExtractor={(item) => item.participantId.toString()}
     scrollEnabled={false}
     renderItem={({ item }) => (
-      <View style={participantStyles.item}>
-        <Text style={participantStyles.itemText}>Nombre: {item.nombre}</Text>
-        <Text style={participantStyles.itemText}>Email: {item.email}</Text>
-        <Text style={participantStyles.itemText}>CBU: {item.CBU}</Text>
-        <Text style={participantStyles.itemText}>Teléfono: {item.telefono}</Text>
-        <View style={participantStyles.itemButtons}>
-          <TouchableOpacity onPress={() => openModalForEdit(item)}>
-            <Image 
-              source={require('../assets/iconos/lapicera.png')}
-              style={participantStyles.actionIcon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => deleteParticipant(item.participantId)}>
-            <Image 
-              source={require('../assets/iconos/papelera.png')}
-              style={participantStyles.actionIcon}
-            />
-          </TouchableOpacity>
-        </View>
+      <View style={participantStyles.itemRow}>
+        <Text style={participantStyles.itemCellName}>{item.nombre}</Text>
+        <Text style={participantStyles.itemCellTel}>{item.telefono}</Text>
+        <Text style={participantStyles.itemCellCBU}>{item.CBU}</Text>
+        <Text style={participantStyles.itemCellEmail}>{item.email}</Text>
+        <TouchableOpacity onPress={() => openModalForEdit(item)}>
+          <Image 
+            source={require('../assets/iconos/lapicera.png')}
+            style={participantStyles.actionIcon}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => deleteParticipant(item.participantId)}>
+          <Image 
+            source={require('../assets/iconos/papelera.png')}
+            style={participantStyles.actionIcon}
+          />
+        </TouchableOpacity>
       </View>
     )}
   />
@@ -150,6 +157,7 @@ setModalVisible(false);
     </View>
   </Modal>
 </View>
+
 
   );
 }
