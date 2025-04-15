@@ -1,23 +1,20 @@
 // screens/EditarEventoScreen.js
 import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  Button, 
-  Alert, 
-  ScrollView 
-} from 'react-native';
+import { View, Text, TextInput, Button, Alert, ScrollView } from 'react-native';
 import editarEventoStyles from '../styles/EditarEventoStyles';
 import ParticipantManager from '../components/ParticipantManager';
+import GastosManager from '../components/GastosManager';
 
 export default function EditarEventoScreen({ route, navigation }) {
   const { evento } = route.params;
+
   const [titulo, setTitulo] = useState(evento.titulo);
   const [fecha, setFecha] = useState(evento.fecha);
   const [direccion, setDireccion] = useState(evento.direccion);
   const [maps, setMaps] = useState(evento.maps);
+
   const [participants, setParticipants] = useState(evento.participantes || []);
+  const [gastos, setGastos] = useState(evento.gastos || []);
 
   const actualizarEvento = () => {
     const updatedEvent = {
@@ -25,8 +22,8 @@ export default function EditarEventoScreen({ route, navigation }) {
       fecha,
       direccion,
       maps,
-      gastos: evento.gastos || [],
       participantes: participants,
+      gastos,
     };
 
     fetch(`http://192.168.0.120:3000/api/eventos/${evento.eventoId}`, {
@@ -48,6 +45,7 @@ export default function EditarEventoScreen({ route, navigation }) {
   return (
     <ScrollView contentContainerStyle={editarEventoStyles.container}>
       <Text style={editarEventoStyles.title}>Editar Evento</Text>
+
       <TextInput
         style={editarEventoStyles.input}
         placeholder="Título del Evento"
@@ -72,11 +70,13 @@ export default function EditarEventoScreen({ route, navigation }) {
         value={maps}
         onChangeText={setMaps}
       />
-      {/* Subcomponente para gestionar participantes */}
-      <ParticipantManager 
-        participants={participants} 
-        onParticipantsChange={setParticipants} 
-      />
+
+      {/* Participantes (si aplica) */}
+       <ParticipantManager participants={participants} onParticipantsChange={setParticipants} /> 
+
+      {/* Gastos */}
+      <GastosManager gastos={gastos} onGastosChange={setGastos} />
+
       <Button title="Actualizar Evento" onPress={actualizarEvento} />
     </ScrollView>
   );

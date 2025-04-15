@@ -1,26 +1,22 @@
 // screens/CrearEventoScreen.js
 import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  Button, 
-  Alert, 
-  ScrollView 
-} from 'react-native';
+import { View, Text, TextInput, Button, Alert, ScrollView } from 'react-native';
 import crearEventoStyles from '../styles/CrearEventoStyles';
-import ParticipantManager from '../components/ParticipantManager';
+import ParticipantManager from '../components/ParticipantManager'; // Si tienes participantes
+import GastosManager from '../components/GastosManager';          // Nuevo subcomponente de gastos
 
 export default function CrearEventoScreen({ navigation }) {
   const [titulo, setTitulo] = useState('');
   const [fecha, setFecha] = useState('');
   const [direccion, setDireccion] = useState('');
   const [maps, setMaps] = useState('');
-  const [participants, setParticipants] = useState([]);
+
+  const [participants, setParticipants] = useState([]); // Por si usas participantes
+  const [gastos, setGastos] = useState([]);             // Arreglo de gastos
 
   const crearEvento = () => {
     if (!titulo || !fecha || !direccion || !maps) {
-      Alert.alert('Error', 'Complete todos los campos del evento');
+      Alert.alert('Error', 'Completa todos los campos del evento');
       return;
     }
 
@@ -29,8 +25,8 @@ export default function CrearEventoScreen({ navigation }) {
       fecha,
       direccion,
       maps,
-      gastos: [],
-      participantes: participants,
+      gastos,         // Se envía el array de gastos
+      participantes: participants, // Si también tienes participantes
     };
 
     fetch('http://192.168.0.120:3000/api/eventos', {
@@ -52,6 +48,7 @@ export default function CrearEventoScreen({ navigation }) {
   return (
     <ScrollView contentContainerStyle={crearEventoStyles.container}>
       <Text style={crearEventoStyles.title}>Crear Nuevo Evento</Text>
+
       <TextInput
         style={crearEventoStyles.input}
         placeholder="Nombre del Evento"
@@ -76,11 +73,13 @@ export default function CrearEventoScreen({ navigation }) {
         value={maps}
         onChangeText={setMaps}
       />
-      {/* Subcomponente para gestionar participantes */}
-      <ParticipantManager 
-        participants={participants} 
-        onParticipantsChange={setParticipants} 
-      />
+
+      {/* Ejemplo si usas participantes */}
+       <ParticipantManager participants={participants} onParticipantsChange={setParticipants} /> 
+
+      {/* Subcomponente Gastos */}
+      <GastosManager gastos={gastos} onGastosChange={setGastos} />
+
       <Button title="Crear Evento" onPress={crearEvento} />
     </ScrollView>
   );
