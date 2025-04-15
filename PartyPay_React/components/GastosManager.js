@@ -1,3 +1,4 @@
+// components/GastosManager.js
 import React, { useState } from 'react';
 import { 
   View, 
@@ -6,66 +7,108 @@ import {
   TouchableOpacity, 
   Modal, 
   TextInput, 
-  Button 
+  Button,
+  Image
 } from 'react-native';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import gastosStyles from '../styles/GastosManagerStyles';
 
 const GastosManager = ({ gastos, onGastosChange }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editingGasto, setEditingGasto] = useState(null);
 
-  // Campos para el formulario del gasto
+  // Campos del formulario
   const [descripcion, setDescripcion] = useState('');
   const [monto, setMonto] = useState('');
   const [participantId, setParticipantId] = useState('');
   const [fecha, setFecha] = useState('');
+  
+  // Estados para mensajes de error (usados solo para pintar el borde)
+  const [errorMonto, setErrorMonto] = useState('');
+  const [errorParticipant, setErrorParticipant] = useState('');
+  const [errorFecha, setErrorFecha] = useState('');
 
-  // Abre el modal para agregar un nuevo gasto
+  // DatePicker
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+
   const openModalForNew = () => {
     setEditingGasto(null);
     setDescripcion('');
     setMonto('');
     setParticipantId('');
     setFecha('');
+    setErrorMonto('');
+    setErrorParticipant('');
+    setErrorFecha('');
     setModalVisible(true);
   };
 
-  // Abre el modal para editar un gasto existente
   const openModalForEdit = (gasto) => {
     setEditingGasto(gasto);
     setDescripcion(gasto.descripcion);
-    setMonto(gasto.monto.toString());
-    setParticipantId(gasto.participantId.toString());
+    setMonto(gasto.monto ? gasto.monto.toString() : '');
+    setParticipantId(gasto.participantId ? gasto.participantId.toString() : '');
     setFecha(gasto.fecha);
+    setErrorMonto('');
+    setErrorParticipant('');
+    setErrorFecha('');
     setModalVisible(true);
   };
 
-  // Guarda el gasto (nuevo o editado)
+  const showDatePicker = () => {
+    setDatePickerVisible(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisible(false);
+  };
+
+  const handleConfirm = (date) => {
+    // Formatear fecha a "YYYY-MM-DD"
+    const formattedDate = date.toISOString().split('T')[0];
+    setFecha(formattedDate);
+    hideDatePicker();
+  };
+
   const saveGasto = () => {
-    if (!descripcion || !monto || !participantId || !fecha) {
-      alert('Por favor, completa todos los campos del gasto');
-      return;
+    let valid = true;
+    if (!monto) {
+      setErrorMonto('error');
+      valid = false;
+    } else {
+      setErrorMonto('');
     }
+    if (!participantId) {
+      setErrorParticipant('error');
+      valid = false;
+    } else {
+      setErrorParticipant('');
+    }
+    if (!fecha) {
+      setErrorFecha('error');
+      valid = false;
+    } else {
+      setErrorFecha('');
+    }
+    if (!valid) return;
 
     const montoNumber = parseFloat(monto);
     const participantIdNumber = parseInt(participantId, 10);
     let updatedGastos = [...gastos];
 
     if (editingGasto) {
-      // Actualiza el gasto existente
       updatedGastos = updatedGastos.map(g =>
         g.gastosId === editingGasto.gastosId
           ? { ...g, descripcion, monto: montoNumber, participantId: participantIdNumber, fecha }
           : g
       );
     } else {
-      // Crea un nuevo gasto (ID único usando Date.now)
       const newGasto = {
         gastosId: Date.now(),
         descripcion,
         monto: montoNumber,
         participantId: participantIdNumber,
-        fecha
+        fecha,
       };
       updatedGastos.push(newGasto);
     }
@@ -73,7 +116,6 @@ const GastosManager = ({ gastos, onGastosChange }) => {
     setModalVisible(false);
   };
 
-  // Elimina un gasto
   const deleteGasto = (gastosId) => {
     const updatedList = gastos.filter(g => g.gastosId !== gastosId);
     onGastosChange(updatedList);
@@ -90,7 +132,7 @@ const GastosManager = ({ gastos, onGastosChange }) => {
           <View style={gastosStyles.item}>
             <Text style={gastosStyles.itemText}>Descripción: {item.descripcion}</Text>
             <Text style={gastosStyles.itemText}>Monto: {item.monto}</Text>
-            <Text style={gastosStyles.itemText}>ParticipantID: {item.participantId}</Text>
+            <Text style={gastosStyles.itemText}>Participante: {item.participantId}</Text>
             <Text style={gastosStyles.itemText}>Fecha: {item.fecha}</Text>
             <View style={gastosStyles.itemButtons}>
               <TouchableOpacity onPress={() => openModalForEdit(item)}>
@@ -113,41 +155,78 @@ const GastosManager = ({ gastos, onGastosChange }) => {
       >
         <View style={gastosStyles.modalBackground}>
           <View style={gastosStyles.modalContainer}>
-            <Text style={gastosStyles.modalTitle}>
-              {editingGasto ? 'Editar Gasto' : 'Nuevo Gasto'}
-            </Text>
-            <TextInput
-              placeholder="Descripción"
-              value={descripcion}
-              onChangeText={setDescripcion}
-              style={gastosStyles.modalInput}
-            />
-            <TextInput
-              placeholder="Monto"
-              value={monto}
-              onChangeText={setMonto}
-              keyboardType="numeric"
-              style={gastosStyles.modalInput}
-            />
-            <TextInput
-              placeholder="ParticipantID"
-              value={participantId}
-              onChangeText={setParticipantId}
-              keyboardType="numeric"
-              style={gastosStyles.modalInput}
-            />
-            <TextInput
-              placeholder="Fecha (dd/mm/yyyy)"
-              value={fecha}
-              onChangeText={setFecha}
-              style={gastosStyles.modalInput}
-            />
+            <View style={gastosStyles.modalHeader}>
+              <Image 
+                source={require('../assets/iconos/bank.png')}
+                style={gastosStyles.modalTitleIcon}
+              />
+              <Text style={gastosStyles.modalTitle}>
+                {editingGasto ? 'Editar Gasto' : 'Nuevo Gasto'}
+              </Text>
+            </View>
+            <View style={gastosStyles.inputGrid}>
+              <View style={gastosStyles.inputContainer}>
+                <Image source={require('../assets/iconos/texto.png')} style={gastosStyles.inputIcon} />
+                <TextInput
+                  placeholder="Descripción"
+                  value={descripcion}
+                  onChangeText={setDescripcion}
+                  style={gastosStyles.modalInput}
+                />
+              </View>
+              <View style={gastosStyles.inputContainer}>
+                <Image source={require('../assets/iconos/billete.png')} style={gastosStyles.inputIcon} />
+                <View style={{ flex: 1 }}>
+                  <TextInput
+                    placeholder="Monto"
+                    value={monto}
+                    onChangeText={setMonto}
+                    style={[gastosStyles.modalInput, errorMonto ? { borderColor: 'red' } : null]}
+                    keyboardType="numeric"
+                  />
+                </View>
+              </View>
+              <View style={gastosStyles.inputContainer}>
+                <Image source={require('../assets/iconos/participante.png')} style={gastosStyles.inputIcon} />
+                <View style={{ flex: 1 }}>
+                  <TextInput
+                    placeholder="Participante"
+                    value={participantId}
+                    onChangeText={setParticipantId}
+                    style={[gastosStyles.modalInput, errorParticipant ? { borderColor: 'red' } : null]}
+                    keyboardType="numeric"
+                  />
+                </View>
+              </View>
+              <View style={gastosStyles.inputContainer}>
+                <Image source={require('../assets/iconos/calendario.png')} style={gastosStyles.inputIcon} />
+                <View style={{ flex: 1 }}>
+                  <TouchableOpacity onPress={showDatePicker} style={gastosStyles.datePickerButton}>
+                    <Text style={gastosStyles.datePickerText}>
+                      {fecha ? fecha : 'Selecciona fecha'}
+                    </Text>
+                  </TouchableOpacity>
+                  {errorFecha ? null : null}
+                </View>
+              </View>
+            </View>
             <View style={gastosStyles.modalButtons}>
-              <Button title="Cancelar" onPress={() => setModalVisible(false)} />
-              <Button title="Guardar" onPress={saveGasto} />
+              <TouchableOpacity onPress={() => setModalVisible(false)} style={{ flex: 1 }}>
+                <Text style={gastosStyles.cancelLink}>Cancelar</Text>
+              </TouchableOpacity>
+              <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                <Button title="Guardar" onPress={saveGasto} />
+              </View>
             </View>
           </View>
         </View>
+
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
       </Modal>
     </View>
   );

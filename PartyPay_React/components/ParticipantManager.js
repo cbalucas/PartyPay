@@ -1,3 +1,4 @@
+// components/ParticipantManager.js
 import React, { useState } from 'react';
 import { 
   View, 
@@ -19,11 +20,10 @@ const ParticipantManager = ({ participants, onParticipantsChange, whatsappActive
   const [cbu, setCbu] = useState('');
   const [telefono, setTelefono] = useState('');
 
-  // Estados para mensajes de error en campos requeridos
+  // Estados para marcar error (usaremos simplemente un string; si no está vacío, se pinta de rojo)
   const [errorNombre, setErrorNombre] = useState('');
   const [errorTelefono, setErrorTelefono] = useState('');
 
-  // Abre el modal para un participante nuevo
   const openModalForNew = () => {
     setEditingParticipant(null);
     setNombre('');
@@ -35,7 +35,6 @@ const ParticipantManager = ({ participants, onParticipantsChange, whatsappActive
     setModalVisible(true);
   };
 
-  // Abre el modal para editar un participante existente
   const openModalForEdit = (participant) => {
     setEditingParticipant(participant);
     setNombre(participant.nombre);
@@ -47,37 +46,30 @@ const ParticipantManager = ({ participants, onParticipantsChange, whatsappActive
     setModalVisible(true);
   };
 
-  // Guarda el participante (nuevo o actualizado) con validación
   const saveParticipant = () => {
     let valid = true;
-    // Validar campo "Nombre"
     if (!nombre) {
-      setErrorNombre('Requerido');
+      setErrorNombre('error');
       valid = false;
     } else {
       setErrorNombre('');
     }
-    // Validar campo "Teléfono" solo si whatsappActive es true
     if (whatsappActive && !telefono) {
-      setErrorTelefono('Requerido');
+      setErrorTelefono('error');
       valid = false;
     } else {
       setErrorTelefono('');
     }
-    if (!valid) {
-      return;
-    }
+    if (!valid) return;
 
     let updatedParticipants = [...participants];
     if (editingParticipant) {
-      // Actualizar el participante existente
       updatedParticipants = updatedParticipants.map(p =>
         p.participantId === editingParticipant.participantId
           ? { ...p, nombre, email, CBU: cbu, telefono }
           : p
       );
     } else {
-      // Crear un nuevo participante (usando Date.now() como ID)
       const newParticipant = {
         participantId: Date.now(),
         nombre,
@@ -91,7 +83,6 @@ const ParticipantManager = ({ participants, onParticipantsChange, whatsappActive
     setModalVisible(false);
   };
 
-  // Elimina un participante
   const deleteParticipant = (participantId) => {
     const updatedParticipants = participants.filter(p => p.participantId !== participantId);
     onParticipantsChange(updatedParticipants);
@@ -140,7 +131,7 @@ const ParticipantManager = ({ participants, onParticipantsChange, whatsappActive
                 {editingParticipant ? 'Editar Participante' : 'Nuevo Participante'}
               </Text>
             </View>
-            {/* Grid de dos columnas para cada campo */}
+            {/* Grid con dos columnas para los campos */}
             <View style={participantStyles.inputGrid}>
               <View style={participantStyles.inputContainer}>
                 <Image source={require('../assets/iconos/nombre.png')} style={participantStyles.inputIcon} />
@@ -149,9 +140,11 @@ const ParticipantManager = ({ participants, onParticipantsChange, whatsappActive
                     placeholder="Nombre"
                     value={nombre}
                     onChangeText={setNombre}
-                    style={participantStyles.modalInput}
+                    style={[
+                      participantStyles.modalInput,
+                      errorNombre ? { borderColor: 'red' } : null,
+                    ]}
                   />
-                  {errorNombre ? <Text style={participantStyles.errorText}>{errorNombre}</Text> : null}
                 </View>
               </View>
               <View style={participantStyles.inputContainer}>
@@ -179,9 +172,11 @@ const ParticipantManager = ({ participants, onParticipantsChange, whatsappActive
                     placeholder="Teléfono"
                     value={telefono}
                     onChangeText={setTelefono}
-                    style={participantStyles.modalInput}
+                    style={[
+                      participantStyles.modalInput,
+                      whatsappActive && errorTelefono ? { borderColor: 'red' } : null,
+                    ]}
                   />
-                  {whatsappActive && errorTelefono ? <Text style={participantStyles.errorText}>{errorTelefono}</Text> : null}
                 </View>
               </View>
             </View>

@@ -45,22 +45,74 @@ export default StyleSheet.create({
     padding: 20,
     elevation: 5,
   },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  modalTitleIcon: {
+    width: 30,
+    height: 30,
+    marginRight: 10,
+    resizeMode: 'contain',
+  },
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   modalInput: {
+    flex: 1,
     borderWidth: 1,
     borderColor: '#ccc',
     padding: 8,
     borderRadius: 5,
-    marginBottom: 10,
   },
   modalButtons: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     marginTop: 10,
+  },
+  // Grid en dos columnas
+  inputGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  inputContainer: {
+    width: '48%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  inputIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+    resizeMode: 'contain',
+  },
+  // Botón cancelar como link
+  cancelLink: {
+    color: 'blue',
+    textDecorationLine: 'underline',
+    fontSize: 16,
+  },
+  // Estilo para mensajes de error
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 3,
+  },
+  // Estilo para el botón de fecha
+  datePickerButton: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 8,
+    borderRadius: 5,
+  },
+  datePickerText: {
+    fontSize: 16,
+    color: '#333',
   },
 });
