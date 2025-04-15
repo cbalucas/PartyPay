@@ -1,7 +1,15 @@
+// screens/EditarEventoScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
-// Importar estilos desde nuestro archivo separado
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  Button, 
+  Alert, 
+  ScrollView 
+} from 'react-native';
 import editarEventoStyles from '../styles/EditarEventoStyles';
+import ParticipantManager from '../components/ParticipantManager';
 
 export default function EditarEventoScreen({ route, navigation }) {
   const { evento } = route.params;
@@ -9,15 +17,21 @@ export default function EditarEventoScreen({ route, navigation }) {
   const [fecha, setFecha] = useState(evento.fecha);
   const [direccion, setDireccion] = useState(evento.direccion);
   const [maps, setMaps] = useState(evento.maps);
+  const [participants, setParticipants] = useState(evento.participantes || []);
 
   const actualizarEvento = () => {
-    const updatedEvent = { titulo, fecha, direccion, maps };
+    const updatedEvent = {
+      titulo,
+      fecha,
+      direccion,
+      maps,
+      gastos: evento.gastos || [],
+      participantes: participants,
+    };
 
     fetch(`http://192.168.0.120:3000/api/eventos/${evento.eventoId}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedEvent)
     })
       .then(response => response.json())
@@ -32,7 +46,7 @@ export default function EditarEventoScreen({ route, navigation }) {
   };
 
   return (
-    <View style={editarEventoStyles.container}>
+    <ScrollView contentContainerStyle={editarEventoStyles.container}>
       <Text style={editarEventoStyles.title}>Editar Evento</Text>
       <TextInput
         style={editarEventoStyles.input}
@@ -58,7 +72,12 @@ export default function EditarEventoScreen({ route, navigation }) {
         value={maps}
         onChangeText={setMaps}
       />
+      {/* Subcomponente para gestionar participantes */}
+      <ParticipantManager 
+        participants={participants} 
+        onParticipantsChange={setParticipants} 
+      />
       <Button title="Actualizar Evento" onPress={actualizarEvento} />
-    </View>
+    </ScrollView>
   );
 }
