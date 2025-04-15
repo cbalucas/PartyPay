@@ -1,6 +1,14 @@
 // screens/EditarEventoScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, ScrollView } from 'react-native';
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  Button, 
+  Alert, 
+  ScrollView, 
+  Switch 
+} from 'react-native';
 import editarEventoStyles from '../styles/EditarEventoStyles';
 import ParticipantManager from '../components/ParticipantManager';
 import GastosManager from '../components/GastosManager';
@@ -8,11 +16,17 @@ import GastosManager from '../components/GastosManager';
 export default function EditarEventoScreen({ route, navigation }) {
   const { evento } = route.params;
 
+  // Estados generales del evento
   const [titulo, setTitulo] = useState(evento.titulo);
   const [fecha, setFecha] = useState(evento.fecha);
   const [direccion, setDireccion] = useState(evento.direccion);
   const [maps, setMaps] = useState(evento.maps);
 
+  // Estado para Whatsapp (usando valor del evento en caso de edición)
+  const [whatsapp, setWhatsapp] = useState(evento.whatsapp || false);
+  const computedStatus = fecha ? ((new Date(fecha) >= new Date()) ? "Proximo" : "Cerrado") : "";
+
+  // Estados para participantes y gastos
   const [participants, setParticipants] = useState(evento.participantes || []);
   const [gastos, setGastos] = useState(evento.gastos || []);
 
@@ -22,8 +36,10 @@ export default function EditarEventoScreen({ route, navigation }) {
       fecha,
       direccion,
       maps,
+      status: computedStatus,
+      whatsapp,
       participantes: participants,
-      gastos,
+      gastos: gastos
     };
 
     fetch(`http://192.168.0.120:3000/api/eventos/${evento.eventoId}`, {
@@ -32,7 +48,7 @@ export default function EditarEventoScreen({ route, navigation }) {
       body: JSON.stringify(updatedEvent)
     })
       .then(response => response.json())
-      .then(data => {
+      .then(() => {
         Alert.alert('Éxito', 'Evento actualizado');
         navigation.goBack();
       })
@@ -71,11 +87,30 @@ export default function EditarEventoScreen({ route, navigation }) {
         onChangeText={setMaps}
       />
 
-      {/* Participantes (si aplica) */}
-       <ParticipantManager participants={participants} onParticipantsChange={setParticipants} /> 
+      {fecha ? (
+        <Text style={editarEventoStyles.statusText}>
+          Status del evento: {computedStatus}
+        </Text>
+      ) : null}
 
-      {/* Gastos */}
-      <GastosManager gastos={gastos} onGastosChange={setGastos} />
+      <View style={editarEventoStyles.switchRow}>
+        <Text style={{ marginRight: 10 }}>Enviar resumen por Whatsapp:</Text>
+        <Switch value={whatsapp} onValueChange={setWhatsapp} />
+      </View>
+
+      <View style={{ height: 250, marginBottom: 10 }}>
+      <ParticipantManager 
+        participants={participants} 
+        onParticipantsChange={setParticipants} 
+        whatsappActive={whatsapp}  
+      />
+      </View>
+      <View style={{ height: 250, marginBottom: 10 }}>
+        <GastosManager 
+          gastos={gastos} 
+          onGastosChange={setGastos} 
+        />
+      </View>
 
       <Button title="Actualizar Evento" onPress={actualizarEvento} />
     </ScrollView>

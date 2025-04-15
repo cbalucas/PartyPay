@@ -9,13 +9,13 @@ app.use(express.json());
 
 // Lista en memoria para almacenar los eventos
 let eventos = [
-  { eventoId: 1, titulo: 'Fiesta de Lanzamiento', fecha: '2025-05-01', direccion: 'Calle Falsa 123', maps: 'https://maps.example.com', gastos: [], participantes: [] },
-  { eventoId: 2, titulo: 'Noche PartyPay', fecha: '2025-06-15', direccion: 'Avenida Siempre Viva 742', maps: 'https://maps.example.com', gastos: [], participantes: [] },
-  { eventoId: 3, titulo: 'Evento Exclusivo', fecha: '2025-07-20', direccion: 'Boulevard de los Sueños Rotos 456', maps: 'https://maps.example.com', gastos: [], participantes: [] },
-  { eventoId: 4, titulo: 'Reunión de Desarrolladores', fecha: '2025-08-10', direccion: 'Calle de la Innovación 789', maps: 'https://maps.example.com', gastos: [], participantes: [] },
-  { eventoId: 5, titulo: 'Conferencia de Tecnología', fecha: '2025-09-25', direccion: 'Avenida del Futuro 321', maps: 'https://maps.example.com', gastos: [], participantes: [] },
-  { eventoId: 6, titulo: 'Fiesta de Fin de Año', fecha: '2025-12-31', direccion: 'Calle de la Celebración 654', maps: 'https://maps.example.com', gastos: [], participantes: [] },
-  { eventoId: 7, titulo: 'Encuentro de Amigos', fecha: '2025-11-11', direccion: 'Calle de la Amistad 987', maps: 'https://maps.example.com', gastos: [], participantes: [] },
+  { eventoId: 1, titulo: 'Fiesta de Lanzamiento', fecha: '2025-05-01', direccion: 'Calle Falsa 123', maps: 'https://maps.example.com', gastos: [], participantes: [],whatsapp: false },
+  { eventoId: 2, titulo: 'Noche PartyPay', fecha: '2025-06-15', direccion: 'Avenida Siempre Viva 742', maps: 'https://maps.example.com', gastos: [], participantes: [] ,whatsapp: false},
+  { eventoId: 3, titulo: 'Evento Exclusivo', fecha: '2025-07-20', direccion: 'Boulevard de los Sueños Rotos 456', maps: 'https://maps.example.com', gastos: [], participantes: [] ,whatsapp: false},
+  { eventoId: 4, titulo: 'Reunión de Desarrolladores', fecha: '2025-08-10', direccion: 'Calle de la Innovación 789', maps: 'https://maps.example.com', gastos: [], participantes: [], whatsapp: false },
+  { eventoId: 5, titulo: 'Conferencia de Tecnología', fecha: '2025-09-25', direccion: 'Avenida del Futuro 321', maps: 'https://maps.example.com', gastos: [], participantes: [] ,whatsapp: true},
+  { eventoId: 6, titulo: 'Fiesta de Fin de Año', fecha: '2025-12-31', direccion: 'Calle de la Celebración 654', maps: 'https://maps.example.com', gastos: [], participantes: [], whatsapp: true},
+  { eventoId: 7, titulo: 'Encuentro de Amigos', fecha: '2025-11-11', direccion: 'Calle de la Amistad 987', maps: 'https://maps.example.com', gastos: [], participantes: [],whatsapp: true },
 ];
 
 // Habilitar CORS para todas las rutas

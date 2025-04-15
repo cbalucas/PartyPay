@@ -1,9 +1,17 @@
-// components/ParticipantManager.js
 import React, { useState } from 'react';
-import {   View,   Text,   FlatList,   TouchableOpacity,   Modal,   TextInput,   Button } from 'react-native';
+import { 
+  View, 
+  Text, 
+  FlatList, 
+  TouchableOpacity, 
+  Modal, 
+  TextInput, 
+  Button,
+  Image
+} from 'react-native';
 import participantStyles from '../styles/ParticipantManagerStyles';
 
-const ParticipantManager = ({ participants, onParticipantsChange }) => {
+const ParticipantManager = ({ participants, onParticipantsChange, whatsappActive }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editingParticipant, setEditingParticipant] = useState(null);
   const [nombre, setNombre] = useState('');
@@ -11,42 +19,65 @@ const ParticipantManager = ({ participants, onParticipantsChange }) => {
   const [cbu, setCbu] = useState('');
   const [telefono, setTelefono] = useState('');
 
-  // Abre el modal para agregar nuevo participante
+  // Estados para mensajes de error en campos requeridos
+  const [errorNombre, setErrorNombre] = useState('');
+  const [errorTelefono, setErrorTelefono] = useState('');
+
+  // Abre el modal para un participante nuevo
   const openModalForNew = () => {
     setEditingParticipant(null);
     setNombre('');
     setEmail('');
     setCbu('');
     setTelefono('');
+    setErrorNombre('');
+    setErrorTelefono('');
     setModalVisible(true);
   };
 
-  // Abre el modal para editar el participante seleccionado
+  // Abre el modal para editar un participante existente
   const openModalForEdit = (participant) => {
     setEditingParticipant(participant);
     setNombre(participant.nombre);
     setEmail(participant.email);
     setCbu(participant.CBU);
-    setTelefono(participant.telefono.toString());
+    setTelefono(participant.telefono ? participant.telefono.toString() : '');
+    setErrorNombre('');
+    setErrorTelefono('');
     setModalVisible(true);
   };
 
-  // Guarda el participante (nuevo o editado)
+  // Guarda el participante (nuevo o actualizado) con validación
   const saveParticipant = () => {
-    if (!nombre || !email || !cbu || !telefono) {
-      alert('Por favor, completa todos los campos');
+    let valid = true;
+    // Validar campo "Nombre"
+    if (!nombre) {
+      setErrorNombre('Requerido');
+      valid = false;
+    } else {
+      setErrorNombre('');
+    }
+    // Validar campo "Teléfono" solo si whatsappActive es true
+    if (whatsappActive && !telefono) {
+      setErrorTelefono('Requerido');
+      valid = false;
+    } else {
+      setErrorTelefono('');
+    }
+    if (!valid) {
       return;
     }
+
     let updatedParticipants = [...participants];
     if (editingParticipant) {
-      // Actualizar participante existente
+      // Actualizar el participante existente
       updatedParticipants = updatedParticipants.map(p =>
         p.participantId === editingParticipant.participantId
           ? { ...p, nombre, email, CBU: cbu, telefono }
           : p
       );
     } else {
-      // Agregar participante nuevo (se genera un ID único con Date.now())
+      // Crear un nuevo participante (usando Date.now() como ID)
       const newParticipant = {
         participantId: Date.now(),
         nombre,
@@ -72,6 +103,7 @@ const ParticipantManager = ({ participants, onParticipantsChange }) => {
       <FlatList
         data={participants}
         keyExtractor={(item) => item.participantId.toString()}
+        scrollEnabled={false}
         renderItem={({ item }) => (
           <View style={participantStyles.item}>
             <Text style={participantStyles.itemText}>Nombre: {item.nombre}</Text>
@@ -99,36 +131,67 @@ const ParticipantManager = ({ participants, onParticipantsChange }) => {
       >
         <View style={participantStyles.modalBackground}>
           <View style={participantStyles.modalContainer}>
-            <Text style={participantStyles.modalTitle}>
-              {editingParticipant ? 'Editar Participante' : 'Nuevo Participante'}
-            </Text>
-            <TextInput
-              placeholder="Nombre"
-              value={nombre}
-              onChangeText={setNombre}
-              style={participantStyles.modalInput}
-            />
-            <TextInput
-              placeholder="Email"
-              value={email}
-              onChangeText={setEmail}
-              style={participantStyles.modalInput}
-            />
-            <TextInput
-              placeholder="CBU"
-              value={cbu}
-              onChangeText={setCbu}
-              style={participantStyles.modalInput}
-            />
-            <TextInput
-              placeholder="Teléfono"
-              value={telefono}
-              onChangeText={setTelefono}
-              style={participantStyles.modalInput}
-            />
+            <View style={participantStyles.modalHeader}>
+              <Image 
+                source={require('../assets/iconos/participante.png')} 
+                style={participantStyles.modalTitleIcon} 
+              />
+              <Text style={participantStyles.modalTitle}>
+                {editingParticipant ? 'Editar Participante' : 'Nuevo Participante'}
+              </Text>
+            </View>
+            {/* Grid de dos columnas para cada campo */}
+            <View style={participantStyles.inputGrid}>
+              <View style={participantStyles.inputContainer}>
+                <Image source={require('../assets/iconos/nombre.png')} style={participantStyles.inputIcon} />
+                <View style={{ flex: 1 }}>
+                  <TextInput
+                    placeholder="Nombre"
+                    value={nombre}
+                    onChangeText={setNombre}
+                    style={participantStyles.modalInput}
+                  />
+                  {errorNombre ? <Text style={participantStyles.errorText}>{errorNombre}</Text> : null}
+                </View>
+              </View>
+              <View style={participantStyles.inputContainer}>
+                <Image source={require('../assets/iconos/email.png')} style={participantStyles.inputIcon} />
+                <TextInput
+                  placeholder="Email"
+                  value={email}
+                  onChangeText={setEmail}
+                  style={participantStyles.modalInput}
+                />
+              </View>
+              <View style={participantStyles.inputContainer}>
+                <Image source={require('../assets/iconos/bank.png')} style={participantStyles.inputIcon} />
+                <TextInput
+                  placeholder="CBU"
+                  value={cbu}
+                  onChangeText={setCbu}
+                  style={participantStyles.modalInput}
+                />
+              </View>
+              <View style={participantStyles.inputContainer}>
+                <Image source={require('../assets/iconos/phone.png')} style={participantStyles.inputIcon} />
+                <View style={{ flex: 1 }}>
+                  <TextInput
+                    placeholder="Teléfono"
+                    value={telefono}
+                    onChangeText={setTelefono}
+                    style={participantStyles.modalInput}
+                  />
+                  {whatsappActive && errorTelefono ? <Text style={participantStyles.errorText}>{errorTelefono}</Text> : null}
+                </View>
+              </View>
+            </View>
             <View style={participantStyles.modalButtons}>
-              <Button title="Cancelar" onPress={() => setModalVisible(false)} />
-              <Button title="Guardar" onPress={saveParticipant} />
+              <TouchableOpacity onPress={() => setModalVisible(false)} style={{ flex: 1 }}>
+                <Text style={participantStyles.cancelLink}>Cancelar</Text>
+              </TouchableOpacity>
+              <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                <Button title="Guardar" onPress={saveParticipant} />
+              </View>
             </View>
           </View>
         </View>

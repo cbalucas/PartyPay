@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Modal,
-  TextInput,
-  Button
+import { 
+  View, 
+  Text, 
+  FlatList, 
+  TouchableOpacity, 
+  Modal, 
+  TextInput, 
+  Button 
 } from 'react-native';
 import gastosStyles from '../styles/GastosManagerStyles';
 
@@ -14,13 +14,13 @@ const GastosManager = ({ gastos, onGastosChange }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editingGasto, setEditingGasto] = useState(null);
 
-  // Campos para el formulario de gasto
+  // Campos para el formulario del gasto
   const [descripcion, setDescripcion] = useState('');
   const [monto, setMonto] = useState('');
   const [participantId, setParticipantId] = useState('');
   const [fecha, setFecha] = useState('');
 
-  // Abrir modal para Gasto nuevo
+  // Abre el modal para agregar un nuevo gasto
   const openModalForNew = () => {
     setEditingGasto(null);
     setDescripcion('');
@@ -30,7 +30,7 @@ const GastosManager = ({ gastos, onGastosChange }) => {
     setModalVisible(true);
   };
 
-  // Abrir modal para editar Gasto
+  // Abre el modal para editar un gasto existente
   const openModalForEdit = (gasto) => {
     setEditingGasto(gasto);
     setDescripcion(gasto.descripcion);
@@ -40,36 +40,28 @@ const GastosManager = ({ gastos, onGastosChange }) => {
     setModalVisible(true);
   };
 
-  // Guardar el Gasto (nuevo o editado)
+  // Guarda el gasto (nuevo o editado)
   const saveGasto = () => {
     if (!descripcion || !monto || !participantId || !fecha) {
       alert('Por favor, completa todos los campos del gasto');
       return;
     }
 
-    // Convertir monto a number (o validarlo según requieras)
     const montoNumber = parseFloat(monto);
     const participantIdNumber = parseInt(participantId, 10);
-
     let updatedGastos = [...gastos];
 
     if (editingGasto) {
-      // Edición de gasto existente
+      // Actualiza el gasto existente
       updatedGastos = updatedGastos.map(g =>
         g.gastosId === editingGasto.gastosId
-          ? {
-              ...g,
-              descripcion,
-              monto: montoNumber,
-              participantId: participantIdNumber,
-              fecha
-            }
+          ? { ...g, descripcion, monto: montoNumber, participantId: participantIdNumber, fecha }
           : g
       );
     } else {
-      // Creación de gasto nuevo
+      // Crea un nuevo gasto (ID único usando Date.now)
       const newGasto = {
-        gastosId: Date.now(), // ID único
+        gastosId: Date.now(),
         descripcion,
         monto: montoNumber,
         participantId: participantIdNumber,
@@ -77,12 +69,11 @@ const GastosManager = ({ gastos, onGastosChange }) => {
       };
       updatedGastos.push(newGasto);
     }
-
     onGastosChange(updatedGastos);
     setModalVisible(false);
   };
 
-  // Eliminar un gasto
+  // Elimina un gasto
   const deleteGasto = (gastosId) => {
     const updatedList = gastos.filter(g => g.gastosId !== gastosId);
     onGastosChange(updatedList);
@@ -91,10 +82,10 @@ const GastosManager = ({ gastos, onGastosChange }) => {
   return (
     <View style={gastosStyles.container}>
       <Text style={gastosStyles.title}>Gastos</Text>
-
       <FlatList
         data={gastos}
-        keyExtractor={item => item.gastosId.toString()}
+        keyExtractor={(item) => item.gastosId.toString()}
+        scrollEnabled={false}
         renderItem={({ item }) => (
           <View style={gastosStyles.item}>
             <Text style={gastosStyles.itemText}>Descripción: {item.descripcion}</Text>
@@ -112,7 +103,6 @@ const GastosManager = ({ gastos, onGastosChange }) => {
           </View>
         )}
       />
-
       <Button title="Agregar Gasto" onPress={openModalForNew} />
 
       <Modal

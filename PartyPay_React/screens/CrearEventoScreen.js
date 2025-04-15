@@ -1,22 +1,38 @@
 // screens/CrearEventoScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, ScrollView } from 'react-native';
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  Button, 
+  Alert, 
+  ScrollView, 
+  Switch 
+} from 'react-native';
 import crearEventoStyles from '../styles/CrearEventoStyles';
-import ParticipantManager from '../components/ParticipantManager'; // Si tienes participantes
-import GastosManager from '../components/GastosManager';          // Nuevo subcomponente de gastos
+import ParticipantManager from '../components/ParticipantManager';
+import GastosManager from '../components/GastosManager';
 
 export default function CrearEventoScreen({ navigation }) {
+  // Estados generales del evento
   const [titulo, setTitulo] = useState('');
   const [fecha, setFecha] = useState('');
   const [direccion, setDireccion] = useState('');
   const [maps, setMaps] = useState('');
+  
+  // Estado para el campo Whatsapp (true = se enviará el resumen)
+  const [whatsapp, setWhatsapp] = useState(false);
+  
+  // Se calcula el status en función de la fecha (dinámico)
+  const computedStatus = fecha ? ((new Date(fecha) >= new Date()) ? "Proximo" : "Cerrado") : "";
 
-  const [participants, setParticipants] = useState([]); // Por si usas participantes
-  const [gastos, setGastos] = useState([]);             // Arreglo de gastos
+  // Estados para subcomponentes de participantes y gastos
+  const [participants, setParticipants] = useState([]);
+  const [gastos, setGastos] = useState([]);
 
   const crearEvento = () => {
     if (!titulo || !fecha || !direccion || !maps) {
-      Alert.alert('Error', 'Completa todos los campos del evento');
+      Alert.alert('Error', 'Complete todos los campos del evento');
       return;
     }
 
@@ -25,8 +41,10 @@ export default function CrearEventoScreen({ navigation }) {
       fecha,
       direccion,
       maps,
-      gastos,         // Se envía el array de gastos
-      participantes: participants, // Si también tienes participantes
+      status: computedStatus, // Campo calculado
+      whatsapp,             // Campo booleano
+      participantes,        // Desde el subcomponente
+      gastos                // Desde el subcomponente
     };
 
     fetch('http://192.168.0.120:3000/api/eventos', {
@@ -74,11 +92,31 @@ export default function CrearEventoScreen({ navigation }) {
         onChangeText={setMaps}
       />
 
-      {/* Ejemplo si usas participantes */}
-       <ParticipantManager participants={participants} onParticipantsChange={setParticipants} /> 
+      {fecha ? (
+        <Text style={crearEventoStyles.statusText}>
+          Status del evento: {computedStatus}
+        </Text>
+      ) : null}
 
-      {/* Subcomponente Gastos */}
-      <GastosManager gastos={gastos} onGastosChange={setGastos} />
+      <View style={crearEventoStyles.switchRow}>
+        <Text style={{ marginRight: 10 }}>Enviar resumen por Whatsapp:</Text>
+        <Switch value={whatsapp} onValueChange={setWhatsapp} />
+      </View>
+
+      {/* Se envuelve cada subcomponente en un contenedor de altura fija para evitar problemas de scroll */}
+      <View style={{ height: 250, marginBottom: 10 }}>
+      <ParticipantManager 
+        participants={participants} 
+        onParticipantsChange={setParticipants} 
+        whatsappActive={whatsapp}  
+      />
+      </View>
+      <View style={{ height: 250, marginBottom: 10 }}>
+        <GastosManager 
+          gastos={gastos} 
+          onGastosChange={setGastos} 
+        />
+      </View>
 
       <Button title="Crear Evento" onPress={crearEvento} />
     </ScrollView>
