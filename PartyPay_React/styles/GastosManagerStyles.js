@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { ICON_SIZES } from './GlobalConstants';
 
 export default StyleSheet.create({
   container: {
@@ -51,8 +52,8 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   modalTitleIcon: {
-    width: 30,
-    height: 30,
+    width: ICON_SIZES.header,
+    height: ICON_SIZES.header,
     marginRight: 10,
     resizeMode: 'contain',
   },
@@ -87,8 +88,8 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   inputIcon: {
-    width: 20,
-    height: 20,
+    width: ICON_SIZES.input,
+    height: ICON_SIZES.input,
     marginRight: 5,
     resizeMode: 'contain',
   },
@@ -114,5 +115,11 @@ export default StyleSheet.create({
   datePickerText: {
     fontSize: 16,
     color: '#333',
+  },
+  actionIcon: {
+    width: ICON_SIZES.action,
+    height: ICON_SIZES.action,
+    marginHorizontal: 10,
+    resizeMode: 'contain',
   },
 });
