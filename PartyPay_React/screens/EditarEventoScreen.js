@@ -7,7 +7,9 @@ import {
   Button, 
   Alert, 
   ScrollView, 
-  Switch 
+  Switch,
+  Image,
+  TouchableOpacity,
 } from 'react-native';
 import editarEventoStyles from '../styles/EditarEventoStyles';
 import ParticipantManager from '../components/ParticipantManager';
@@ -21,14 +23,19 @@ export default function EditarEventoScreen({ route, navigation }) {
   const [fecha, setFecha] = useState(evento.fecha);
   const [direccion, setDireccion] = useState(evento.direccion);
   const [maps, setMaps] = useState(evento.maps);
-
+  
   // Estado para Whatsapp (usando valor del evento en caso de edición)
   const [whatsapp, setWhatsapp] = useState(evento.whatsapp || false);
-  const computedStatus = fecha ? ((new Date(fecha) >= new Date()) ? "Proximo" : "Cerrado") : "";
+  const computedStatusFecha = fecha ? ((new Date(fecha) >= new Date()) ? "Proximo" : "Vencido") : "";
 
   // Estados para participantes y gastos
   const [participants, setParticipants] = useState(evento.participantes || []);
   const [gastos, setGastos] = useState(evento.gastos || []);
+
+ // La función cancelarEvento simplemente regresa a la pantalla previa.
+ const cancelarEvento = () => {
+  navigation.goBack();
+  };
 
   const actualizarEvento = () => {
     const updatedEvent = {
@@ -36,7 +43,7 @@ export default function EditarEventoScreen({ route, navigation }) {
       fecha,
       direccion,
       maps,
-      status: computedStatus,
+      status: computedStatusFecha,
       whatsapp,
       participantes: participants,
       gastos: gastos
@@ -60,59 +67,96 @@ export default function EditarEventoScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={editarEventoStyles.container}>
-      <Text style={editarEventoStyles.title}>Editar Evento</Text>
+      <View style={editarEventoStyles.modalHeader}>
+                <Image 
+                  source={require('../assets/iconos/calendarioedit.png')} 
+                  style={editarEventoStyles.modalTitleIcon} 
+                />
+      <Text style={editarEventoStyles.modalTitle}>Editar Evento</Text>
+      </View>
+      <View style={editarEventoStyles.switchRow}>
+        <Text style={{ marginRight: 10 }}>Whatsapp:</Text>
+        <Switch value={whatsapp} onValueChange={setWhatsapp} />
+      </View>
+     
+      <View style={editarEventoStyles.inputContainer}>
+        <Image source={require('../assets/iconos/participantesadd.png')} style={editarEventoStyles.inputIcon} />
+        <TextInput
+          style={editarEventoStyles.input}
+          placeholder="Nombre del Evento"
+          value={titulo}
+          onChangeText={setTitulo}
+        />
+      </View>
 
-      <TextInput
-        style={editarEventoStyles.input}
-        placeholder="Título del Evento"
-        value={titulo}
-        onChangeText={setTitulo}
-      />
+        {fecha ? (
+        <Text style={editarEventoStyles.statusText}>
+          Status del evento: {computedStatusFecha}
+        </Text>
+      ) : null}
+      <View style={editarEventoStyles.inputContainer}>
+        <Image 
+          source={require('../assets/iconos/calendario.png')}
+          style={editarEventoStyles.inputIcon} 
+        />
       <TextInput
         style={editarEventoStyles.input}
         placeholder="Fecha (YYYY-MM-DD)"
         value={fecha}
         onChangeText={setFecha}
       />
+      </View>
+      <View style={editarEventoStyles.inputContainer}>
+        <Image 
+          source={require('../assets/iconos/direccion.png')}
+          style={editarEventoStyles.inputIcon} 
+        />
       <TextInput
         style={editarEventoStyles.input}
         placeholder="Dirección del Evento"
         value={direccion}
         onChangeText={setDireccion}
       />
+      </View>
+      <View style={editarEventoStyles.inputContainer}>
+        <Image 
+          source={require('../assets/iconos/geo.png')}
+          style={editarEventoStyles.inputIcon} 
+        />
       <TextInput
         style={editarEventoStyles.input}
         placeholder="URL de Maps"
         value={maps}
         onChangeText={setMaps}
       />
-
-      {fecha ? (
-        <Text style={editarEventoStyles.statusText}>
-          Status del evento: {computedStatus}
-        </Text>
-      ) : null}
-
-      <View style={editarEventoStyles.switchRow}>
-        <Text style={{ marginRight: 10 }}>Enviar resumen por Whatsapp:</Text>
-        <Switch value={whatsapp} onValueChange={setWhatsapp} />
       </View>
-
-      <View style={{ height: 250, marginBottom: 10 }}>
-      <ParticipantManager 
-        participants={participants} 
-        onParticipantsChange={setParticipants} 
-        whatsappActive={whatsapp}  
-      />
+{/* Botones de Cancelar y Guardar (Actualizar) */}
+    <View style={editarEventoStyles.itemRow}>
+      <TouchableOpacity onPress={actualizarEvento}>
+        <Image 
+            source={require('../assets/iconos/participantesadd.png')}
+            style={editarEventoStyles.modalTitleIcon}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={actualizarEvento}>
+          <Image 
+            source={require('../assets/iconos/billete.png')}
+            style={editarEventoStyles.modalTitleIcon}
+          />
+        </TouchableOpacity>
+                <TouchableOpacity onPress={actualizarEvento}>
+          <Image 
+            source={require('../assets/iconos/save.png')}
+            style={editarEventoStyles.modalTitleIcon}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={cancelarEvento}>
+          <Image 
+            source={require('../assets/iconos/back.png')}
+            style={editarEventoStyles.actionIcon}
+          />
+        </TouchableOpacity>
       </View>
-      <View style={{ height: 250, marginBottom: 10 }}>
-        <GastosManager 
-          gastos={gastos} 
-          onGastosChange={setGastos} 
-        />
-      </View>
-
-      <Button title="Actualizar Evento" onPress={actualizarEvento} />
     </ScrollView>
   );
 }

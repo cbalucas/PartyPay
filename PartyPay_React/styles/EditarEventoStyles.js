@@ -1,5 +1,6 @@
 // styles/EditarEventoStyles.js
 import { StyleSheet } from 'react-native';
+import { ICON_SIZES } from './GlobalConstants';
 
 export default StyleSheet.create({
   container: {
@@ -19,7 +20,61 @@ export default StyleSheet.create({
     marginBottom: 10,
     padding: 10,
     borderRadius: 5,
-    width: '100%'
+    width: '100%',
+    //height: 40
   },
-  
+    inputIcon: {
+      width: ICON_SIZES.input,
+      height: ICON_SIZES.input,
+      marginRight: 5,
+      resizeMode: 'contain',
+    },
+    switchRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 15,
+    },
+    inputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderColor: '#cccccc',
+      //borderWidth: 1,
+      //borderRadius: 5,
+      //marginVertical: 8,
+      //paddingHorizontal: 10,
+    },
+    statusText: {
+      marginVertical: 10,
+      fontStyle: 'italic',
+    },
+    modalHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 15,
+    },
+    modalTitleIcon: {
+      width: ICON_SIZES.header,
+      height: ICON_SIZES.header,
+      marginRight: 10,
+      resizeMode: 'contain',
+    },
+    modalTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      textAlign: 'left',
+      color: '#333333',
+    },
+    itemRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: '#e0e0e0',
+    },
+    actionIcon: {
+      width: ICON_SIZES.action,
+      height: ICON_SIZES.action,
+      marginHorizontal: 8,
+      resizeMode: 'contain',
+    }
 });

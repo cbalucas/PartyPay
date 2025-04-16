@@ -1,6 +1,7 @@
 /* ParticipantManager.js */ 
 import React, { useState } from 'react'; 
-import { View, Text, FlatList, TouchableOpacity, Modal, TextInput, Button, Image } from 'react-native'; import participantStyles from '../styles/ParticipantManagerStyles';
+import { View, Text, FlatList, TouchableOpacity, Modal, TextInput, Button, Image } from 'react-native';
+ import participantStyles from '../styles/ParticipantManagerStyles';
 
 const ParticipantManager = ({ participants, onParticipantsChange, whatsappActive }) => { const [modalVisible, setModalVisible] = useState(false); const [editingParticipant, setEditingParticipant] = useState(null); const [nombre, setNombre] = useState(''); const [email, setEmail] = useState(''); const [cbu, setCbu] = useState(''); const [telefono, setTelefono] = useState('');
 
