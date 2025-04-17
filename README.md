@@ -8,6 +8,15 @@ PartyPay es un proyecto que integra tres componentes principales:
 
 ---
 
+## Webs y Datos
+
+Web: Suprabase
+Login: github
+Url: https://supabase.com/dashboard/project/uabkngefsxyryimczdef
+Proyect: PartyPay Project
+Pass: P@rty_P@y@2025
+
+
 ## Ejecución del Proyecto
 
 ### 1. Ejecutar la API en C# (PartyPay_CSharp)
